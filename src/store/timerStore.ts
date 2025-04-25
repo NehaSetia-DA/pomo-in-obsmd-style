@@ -14,6 +14,13 @@ interface TimerState {
   setBreakDuration: (minutes: number) => void;
 }
 
+const updateDocumentTitle = (timeLeft: number, isBreak: boolean) => {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  document.title = `${isBreak ? 'Break' : 'Focus'} - ${formattedTime}`;
+};
+
 export const useTimerStore = create<TimerState>((set, get) => ({
   isRunning: false,
   isBreak: false,
@@ -32,20 +39,25 @@ export const useTimerStore = create<TimerState>((set, get) => ({
     const timerId = setInterval(() => {
       const { timeLeft, isBreak, workDuration, breakDuration } = get();
       if (timeLeft > 0) {
-        set({ timeLeft: timeLeft - 1 });
+        const newTimeLeft = timeLeft - 1;
+        set({ timeLeft: newTimeLeft });
+        updateDocumentTitle(newTimeLeft, isBreak);
       } else {
         clearInterval(timerId);
         const nextDuration = isBreak ? workDuration : breakDuration;
-        set({
+        const newState = {
           isBreak: !isBreak,
           timeLeft: nextDuration * 60,
           isRunning: false,
           timerId: undefined,
-        });
+        };
+        set(newState);
+        updateDocumentTitle(newState.timeLeft, newState.isBreak);
       }
     }, 1000);
     
     set({ timerId });
+    updateDocumentTitle(get().timeLeft, get().isBreak);
   },
   
   pauseTimer: () => {
@@ -54,6 +66,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
       clearInterval(timerId);
     }
     set({ isRunning: false, timerId: undefined });
+    document.title = 'Pomodoro Timer';
   },
   
   resetTimer: () => {
@@ -67,6 +80,7 @@ export const useTimerStore = create<TimerState>((set, get) => ({
       isBreak: false,
       timerId: undefined,
     });
+    document.title = 'Pomodoro Timer';
   },
   
   setWorkDuration: (minutes: number) => {
