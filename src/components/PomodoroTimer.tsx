@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTimerStore } from '../store/timerStore';
 import { FaPlay, FaPause, FaRedo } from 'react-icons/fa';
 
@@ -22,6 +22,24 @@ const PomodoroTimer = () => {
   const seconds = timeLeft % 60;
 
   const formatTime = (time: number) => time.toString().padStart(2, '0');
+
+  // Set initial title and handle cleanup
+  useEffect(() => {
+    document.title = 'Pomodoro Timer';
+    return () => {
+      document.title = 'Pomodoro Timer';
+    };
+  }, []);
+
+  // Update title when timer state changes
+  useEffect(() => {
+    if (isRunning) {
+      const formattedTime = `${formatTime(minutes)}:${formatTime(seconds)}`;
+      document.title = `${isBreak ? 'Break' : 'Focus'} - ${formattedTime}`;
+    } else {
+      document.title = 'Pomodoro Timer';
+    }
+  }, [isRunning, isBreak, minutes, seconds]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
