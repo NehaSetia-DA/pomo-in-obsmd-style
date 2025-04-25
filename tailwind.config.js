@@ -8,11 +8,11 @@ export default {
     extend: {
       colors: {
         'obsidian': {
-          'bg': '#1a1a1a',
-          'surface': '#2d2d2d',
-          'text': '#d4d4d4',
-          'accent': '#7c3aed',
-          'muted': '#666666',
+          'bg': '#1f1f1f',
+          'surface': '#2a2a2a',
+          'text': '#e6e6e6',
+          'accent': '#00ffff',
+          'muted': '#808080',
         },
       },
       fontFamily: {
