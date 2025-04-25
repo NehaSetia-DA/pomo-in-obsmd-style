@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-obsidian-bg text-obsidian-text min-h-screen;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md transition-colors duration-200;
+  }
+  
+  .btn-primary {
+    @apply bg-obsidian-accent hover:bg-opacity-90 text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-obsidian-surface hover:bg-opacity-90;
+  }
+} 
